@@ -73,6 +73,32 @@ cd android
 > npx capacitor-assets generate --android
 > ```
 
+## 🔧 Troubleshooting: "Gradle build failed with unknown error"
+
+If `./gradlew assembleDebug` (or a CI build) fails with a generic Gradle error, it's very
+likely one of these two known issues, both already fixed in this repo as of the versions
+below -- if you're still hitting it, double check `android/build.gradle` and
+`android/gradle/wrapper/gradle-wrapper.properties` match:
+
+1. **JDK/Gradle mismatch** (`Unsupported class file major version 65` in the full log): this
+   project's Gradle wrapper was pinned to Gradle 8.2.1 + Android Gradle Plugin 8.2.1, which
+   cannot run on JDK 21 -- the JDK bundled with current Android Studio and most CI runners.
+   Fixed by bumping to **Gradle 8.11.1 + AGP 8.9.1**.
+2. **compileSdk too low for a plugin dependency**: `androidx.browser:browser:1.9.0` (pulled
+   in by `@capacitor/browser`) requires `compileSdk 36` and AGP 8.9.1+. Fixed by bumping
+   `compileSdkVersion` to `36` in `android/variables.gradle` (`targetSdkVersion` stays at 34,
+   which is unrelated to this and doesn't need to change).
+3. **Duplicate Kotlin stdlib classes** (`Duplicate class kotlin.collections.jdk8...` at the
+   `:app:checkDebugDuplicateClasses` task): an old transitive dependency still pulls the
+   split `kotlin-stdlib-jdk7`/`kotlin-stdlib-jdk8` artifacts (1.6.21), whose classes were
+   folded into `kotlin-stdlib` itself in Kotlin 1.8+, causing a duplicate-class conflict
+   against the newer `kotlin-stdlib:1.8.22` also on the classpath. Fixed with a
+   `configurations.all { exclude ... }` block in `android/app/build.gradle`.
+
+Verified end-to-end in a clean environment (`npm install` → `npm run build` →
+`npx cap sync android` → `./gradlew assembleDebug`) -- produces a working
+`app/build/outputs/apk/debug/app-debug.apk`.
+
 ## 📂 Project Structure
 
 ```
