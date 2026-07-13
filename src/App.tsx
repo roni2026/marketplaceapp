@@ -18,11 +18,6 @@ import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
 import NotFound from "./pages/NotFound";
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdModeration from "./pages/admin/AdModeration";
-import CategoryManagement from "./pages/admin/CategoryManagement";
-import UserManagement from "./pages/admin/UserManagement";
-import ReportManagement from "./pages/admin/ReportManagement";
 
 const queryClient = new QueryClient();
 
@@ -46,12 +41,7 @@ const App = () => (
                 <Route path="/my-ads" element={<MyAds />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/profile" element={<Profile />} />
-                {/* Admin Routes */}
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/ads" element={<AdModeration />} />
-                <Route path="/admin/categories" element={<CategoryManagement />} />
-                <Route path="/admin/users" element={<UserManagement />} />
-                <Route path="/admin/reports" element={<ReportManagement />} />
+                {/* Admin side removed — this build is customer-only. */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <InstallPrompt />

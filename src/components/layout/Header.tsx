@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, User, Heart, Menu, X, LogOut, Settings } from 'lucide-react';
+import { Search, Plus, User, Heart, Menu, X, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -21,7 +21,7 @@ interface HeaderProps {
 }
 
 export function Header({ searchQuery = '', onSearchChange, onSearch }: HeaderProps) {
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -55,16 +55,7 @@ export function Header({ searchQuery = '', onSearchChange, onSearch }: HeaderPro
           Favorites
         </Link>
       )}
-      {isAdmin && (
-        <Link 
-          to="/admin" 
-          className="text-foreground/80 hover:text-primary transition-colors flex items-center gap-1"
-          onClick={() => mobile && setIsOpen(false)}
-        >
-          <Settings className="h-4 w-4" />
-          Admin
-        </Link>
-      )}
+      {/* Admin link removed — customer-only build. */}
     </>
   );
 
